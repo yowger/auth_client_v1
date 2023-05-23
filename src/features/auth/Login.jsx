@@ -1,6 +1,27 @@
 import { Link } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import loginSchema from "../../services/yup/loginSchema"
+import CTextInput from "../../components/shared/CTextInput"
 
 function Login() {
+    const {
+        handleSubmit,
+        register,
+        // setFocus,
+        formState: { errors },
+    } = useForm({
+        criteriaMode: "all",
+        resolver: yupResolver(loginSchema),
+    })
+
+    const onLoginSubmit = async (formData) => {
+        console.log(
+            "🚀 ~ file: Login.jsx:18 ~ onLoginSubmit ~ formData:",
+            formData
+        )
+    }
+
     return (
         <section className="">
             <div className="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
@@ -9,34 +30,23 @@ function Login() {
                         <h1 className="text-gray-900md:text-2xl text-xl font-bold leading-tight tracking-tight">
                             Sign in to your account
                         </h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
-                            <div>
-                                <label htmlFor="email" className="input-label">
-                                    Your email
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    id="email"
-                                    className="primary-input"
-                                    required=""
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="password"
-                                    className="input-label"
-                                >
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    className="primary-input"
-                                    required=""
-                                />
-                            </div>
+                        <form
+                            className="space-y-4 md:space-y-6"
+                            onSubmit={handleSubmit(onLoginSubmit)}
+                        >
+                            <CTextInput
+                                label="Your email"
+                                name="email"
+                                register={register}
+                                errors={errors}
+                            />
+                            <CTextInput
+                                label="Password"
+                                name="password"
+                                // type="password"
+                                register={register}
+                                errors={errors}
+                            />
                             <div className="flex items-center justify-between">
                                 <div className="flex items-start">
                                     <div className="flex h-5 items-center">
