@@ -1,10 +1,30 @@
-import { Link } from "react-router-dom"
+import { useEffect } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { setCredentials } from "./authSlice"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import loginSchema from "../../services/yup/loginSchema"
 import CTextInput from "../../components/shared/CTextInput"
+import { useLoginMutation } from "./authApiSlice"
 
 function Login() {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const [login, { isLoading, isSuccess, isError, error }] = useLoginMutation()
+    console.log("🚀 ~ file: Login.jsx:16 ~ Login ~ error:", error)
+    console.log("🚀 ~ file: Login.jsx:16 ~ Login ~ isError:", isError)
+
+    useEffect(
+        function () {
+            if (isSuccess) {
+                navigate("/")
+            }
+        },
+        [isSuccess, navigate]
+    )
+
     const {
         handleSubmit,
         register,
@@ -15,11 +35,19 @@ function Login() {
         resolver: yupResolver(loginSchema),
     })
 
-    const onLoginSubmit = async (formData) => {
-        console.log(
-            "🚀 ~ file: Login.jsx:18 ~ onLoginSubmit ~ formData:",
-            formData
-        )
+    async function onLoginSubmit(formData) {
+        const { email, password } = formData
+        try {
+            const { accessToken } = await login({ email, password }).unwrap()
+            dispatch(setCredentials({ accessToken }))
+        } catch (error) {
+            console.log("ERRRRRRRRRRRRRRRROR")
+        }
+    }
+
+    function onClickGoogleLogin(event) {
+        event.preventDefault()
+        window.open("http://localhost:7001/auth/google", "_self")
     }
 
     return (
@@ -86,7 +114,26 @@ function Login() {
                                     Sign up
                                 </Link>
                             </p>
+
+                            <p>or</p>
                         </form>
+                        {/* <form
+                            action="http://localhost:7001/auth/google"
+                            method="get"
+                        >
+                    </form> */}
+                        <button
+                            className="w-full bg-blue-500 p-5 text-white"
+                            onClick={onClickGoogleLogin}
+                        >
+                            Continue with google
+                        </button>
+                        {/* <a
+                            className="w-full bg-blue-500 p-5 text-white"
+                            href="http://localhost:7001/auth/google"
+                        >
+                            Continue with google
+                        </a> */}
                     </div>
                 </div>
             </div>

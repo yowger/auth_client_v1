@@ -17,6 +17,10 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions)
+    // console.log(
+    //     "🚀 ~ file: apiSlice.js:20 ~ baseQueryWithReauth ~ result:",
+    //     result
+    // )
 
     // 403 - no access
     // if (result?.error?.originalStatus === 403) {
