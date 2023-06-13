@@ -5,7 +5,7 @@ import { setCredentials } from "./authSlice"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import loginSchema from "../../services/yup/loginSchema"
-import CTextInput from "../../components/shared/CTextInput"
+import CTextInput from "../../components/shared/TextInput"
 import { useLoginMutation } from "./authApiSlice"
 
 function Login() {
@@ -16,19 +16,11 @@ function Login() {
     console.log("🚀 ~ file: Login.jsx:16 ~ Login ~ error:", error)
     console.log("🚀 ~ file: Login.jsx:16 ~ Login ~ isError:", isError)
 
-    useEffect(
-        function () {
-            if (isSuccess) {
-                navigate("/")
-            }
-        },
-        [isSuccess, navigate]
-    )
-
     const {
         handleSubmit,
         register,
-        // setFocus,
+        setError,
+        setFocus,
         formState: { errors },
     } = useForm({
         criteriaMode: "all",
@@ -40,8 +32,23 @@ function Login() {
         try {
             const { accessToken } = await login({ email, password }).unwrap()
             dispatch(setCredentials({ accessToken }))
+            navigate("/")
         } catch (error) {
-            console.log("ERRRRRRRRRRRRRRRROR")
+            console.log("ERROR: ", error)
+
+            if (error.status === 404) {
+                setError("email", {
+                    type: "manual",
+                    message: "Email is not registered",
+                })
+                setFocus("email")
+            } else if (error.status === 401) {
+                setError("password", {
+                    type: "manual",
+                    message: "Incorrect password",
+                })
+                setFocus("password")
+            }
         }
     }
 
@@ -75,6 +82,8 @@ function Login() {
                                 register={register}
                                 errors={errors}
                             />
+                            {/*
+                            todo in future
                             <div className="flex items-center justify-between">
                                 <div className="flex items-start">
                                     <div className="flex h-5 items-center">
@@ -94,7 +103,7 @@ function Login() {
                                             Remember me
                                         </label>
                                     </div>
-                                </div>
+                                </div> 
                                 <Link
                                     to="#"
                                     className="text-sm font-medium text-blue-600 hover:underline"
@@ -102,6 +111,8 @@ function Login() {
                                     Forgot password?
                                 </Link>
                             </div>
+                            */}
+
                             <button type="submit" className="primary-button">
                                 Sign in
                             </button>
@@ -115,25 +126,22 @@ function Login() {
                                 </Link>
                             </p>
 
-                            <p>or</p>
+                            <p className="flex justify-center py-4 text-gray-900">
+                                or
+                            </p>
                         </form>
-                        {/* <form
-                            action="http://localhost:7001/auth/google"
-                            method="get"
-                        >
-                    </form> */}
+
                         <button
-                            className="w-full bg-blue-500 p-5 text-white"
+                            className="text-grey-900 flex w-full items-center justify-center gap-4 rounded-lg border-2 bg-white px-5 py-2.5 text-center text-sm font-medium hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-blue-300"
                             onClick={onClickGoogleLogin}
+                            disabled={isLoading}
                         >
+                            <img
+                                className="w-5"
+                                src="https://static.vecteezy.com/system/resources/thumbnails/012/871/371/small/google-search-icon-google-product-illustration-free-png.png"
+                            />
                             Continue with google
                         </button>
-                        {/* <a
-                            className="w-full bg-blue-500 p-5 text-white"
-                            href="http://localhost:7001/auth/google"
-                        >
-                            Continue with google
-                        </a> */}
                     </div>
                 </div>
             </div>

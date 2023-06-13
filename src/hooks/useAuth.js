@@ -6,27 +6,48 @@ function useAuth() {
     const userToken = useSelector(selectCurrentToken)
 
     const user = {
+        id: null,
         username: null,
         name: null,
         roles: [],
         avatar: null,
+        isLoggedIn: false,
+        isUser: false,
         isAdmin: false,
-        status: "User",
+        status: "Guest",
     }
 
-    if(userToken ) {
+    if (userToken) {
         const decodedUserToken = jwtDecode(userToken)
-        console.log("🚀 ~ file: useAuth.js:13 ~ useAuth ~ decodedUserToken:", decodedUserToken)
 
-        const { username, name, roles, avatar = null} = decodedUserToken.user
+        const {
+            id,
+            username,
+            name,
+            roles,
+            avatar = null,
+        } = decodedUserToken.user
 
         const updatedUser = Object.assign({}, user, {
-            username, name, roles, avatar
+            id,
+            username,
+            name,
+            roles,
+            avatar,
+            isLoggedIn: true,
         })
-        
-        updatedUser.isAdmin = roles.some(role=> role.toLowerCase() === "admin")
 
-        if(updatedUser.isAdmin) {
+        updatedUser.isUser = roles.some((role) => role.toLowerCase() === "user")
+
+        updatedUser.isAdmin = roles.some(
+            (role) => role.toLowerCase() === "admin"
+        )
+
+        if (updatedUser.isUser) {
+            user.status = "User"
+        }
+
+        if (updatedUser.isAdmin) {
             user.status = "Admin"
         }
 

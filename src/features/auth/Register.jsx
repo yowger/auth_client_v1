@@ -2,43 +2,84 @@ import { useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useSignUpMutation } from "./authApiSlice"
+import { useLoginMutation, useSignUpMutation } from "./authApiSlice"
 import registerSchema from "../../services/yup/registerSchema"
-import CTextInput from "../../components/shared/CTextInput"
+import CTextInput from "../../components/shared/TextInput"
+import { setCredentials } from "./authSlice"
+import { useDispatch } from "react-redux"
 
 function Register() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    const [signUp, { isLoading, isSuccess, isError, error }] =
-        useSignUpMutation()
-
-    useEffect(
-        function () {
-            if (isSuccess) {
-                navigate("/")
-            }
+    const [
+        signUp,
+        {
+            isLoading: signUpIsLoading,
+            signUpIsSuccess,
+            signUpIsError,
+            signUpError,
         },
-        [isSuccess, navigate]
-    )
+    ] = useSignUpMutation()
+
+    const [
+        login,
+        { loginIsLoading, loginIsSuccess, loginIsError, loginError },
+    ] = useLoginMutation()
 
     const {
         handleSubmit,
         register,
-        // setFocus,
+        getValues,
+        setFocus,
+        setError,
         formState: { errors },
     } = useForm({
         criteriaMode: "all",
         resolver: yupResolver(registerSchema),
     })
 
-    const onRegisterSubmit = async (formData) => {
-        const { username, name, email, password } = formData
+    async function loginUser(email, password) {
+        try {
+            const { accessToken } = await login({
+                email,
+                password,
+            }).unwrap()
 
-        const test = await signUp({ username, name, email, password })
-        console.log(
-            "🚀 ~ file: register.jsx:24 ~ onRegisterSubmit ~ test:",
-            test
-        )
+            dispatch(setCredentials({ accessToken }))
+            navigate("/")
+        } catch (error) {
+            console.log("login error: ", error)
+        }
+    }
+
+    const onRegisterSubmit = async (formData) => {
+        const { email, password } = formData
+
+        try {
+            const { success } = await signUp({ email, password }).unwrap()
+
+            if (success) {
+                loginUser(email, password)
+            }
+        } catch (error) {
+            console.log("register error: ", error)
+
+            const { status } = error
+
+            const emailValue = getValues("email")
+            const emailTaken = status === 409
+
+            if (emailTaken) {
+                setError("email", {
+                    type: "manual",
+                    message: `${emailValue} is already in used`,
+                    shouldDirty: true,
+                    shouldValidate: true,
+                })
+                setFocus("email")
+            }
+        }
     }
 
     return (
@@ -54,7 +95,7 @@ function Register() {
                                 className="space-y-4 md:space-y-6"
                                 onSubmit={handleSubmit(onRegisterSubmit)}
                             >
-                                <CTextInput
+                                {/* <CTextInput
                                     label="Username"
                                     name="username"
                                     register={register}
@@ -65,7 +106,7 @@ function Register() {
                                     name="name"
                                     register={register}
                                     errors={errors}
-                                />
+                                /> */}
                                 <CTextInput
                                     label="Email"
                                     name="email"

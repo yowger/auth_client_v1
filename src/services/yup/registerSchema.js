@@ -10,19 +10,19 @@ const specialCharsFormat = /^[-@.\w]*$/
 // Password cannot contain special characters other than _ @ . -
 
 const registerSchema = Yup.object().shape({
-    username: Yup.string()
-        .required()
-        .min(2)
-        .max(20)
-        .matches(
-            usernameFormat,
-            "Only lowercase and uppercase letters, numbers, dashes and underscore are allowed"
-        ),
-    name: Yup.string().trim().min(2).max(30).required("Your name is required"),
+    // username: Yup.string()
+    //     .required()
+    //     .min(2)
+    //     .max(20)
+    //     .matches(
+    //         usernameFormat,
+    //         "Only lowercase and uppercase letters, numbers, dashes and underscore are allowed"
+    //     ),
+    // name: Yup.string().trim().min(2).max(30).required("Your name is required"),
     email: Yup.string().required().email("Your email is required"),
     password: Yup.string()
         .required("password is required")
-        .max(20)
+        .max(20, "Password cannot be more than 20 characters")
         .matches(
             passwordFormat,
             "Password must have 5 or more characters, at least one uppercase and lowercase letter, and one number."

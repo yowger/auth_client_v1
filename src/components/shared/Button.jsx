@@ -54,7 +54,7 @@ const CButton = forwardRef(
 CButton.displayName = "Custom Button"
 
 CButton.propTypes = {
-    children: PropTypes.string,
+    children: PropTypes.string.isRequired,
     name: PropTypes.string,
     type: PropTypes.string,
     className: PropTypes.string,
@@ -62,5 +62,12 @@ CButton.propTypes = {
     size: PropTypes.string,
     disabled: PropTypes.bool,
 }
+
+// CButton.defaultProps = {
+//     className: '',
+//     style: {},
+//     disabled: false
+// }
+  
 
 export default CButton

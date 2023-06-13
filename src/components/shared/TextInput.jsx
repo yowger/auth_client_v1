@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 import { clsx } from "clsx"
-import CInputLabel from "./CInputLabel"
-import CInputMessage from "./CInputMessage"
+import InputLabel from "./InputLabel"
+import InputMessage from "./InputMessage"
 
 const classes = {
     base: "block w-full rounded-lg border transition duration-300 ease-in-out focus:outline-none focus:ring-1",
@@ -18,7 +18,7 @@ const classes = {
     },
 }
 
-function CTextInput({
+function TextInput({
     children,
     label,
     name,
@@ -37,7 +37,7 @@ function CTextInput({
 
     return (
         <div>
-            {label && <CInputLabel variant={variant}>{label}</CInputLabel>}
+            {label && <InputLabel variant={variant}>{label}</InputLabel>}
             <input
                 name={name}
                 disabled={disabled}
@@ -55,15 +55,15 @@ function CTextInput({
                 {children}
             </input>
             {hasError && (
-                <CInputMessage variant={variant}>{errorMessages}</CInputMessage>
+                <InputMessage variant={variant}>{errorMessages}</InputMessage>
             )}
         </div>
     )
 }
 
-CTextInput.displayName = "Custom text input"
+TextInput.displayName = "Custom text input"
 
-CTextInput.propTypes = {
+TextInput.propTypes = {
     children: PropTypes.any,
     label: PropTypes.string,
     name: PropTypes.string,
@@ -77,4 +77,4 @@ CTextInput.propTypes = {
     errors: PropTypes.any,
 }
 
-export default CTextInput
+export default TextInput

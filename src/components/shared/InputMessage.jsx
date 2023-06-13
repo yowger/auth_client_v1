@@ -2,30 +2,28 @@ import PropTypes from "prop-types"
 import { clsx } from "clsx"
 
 const classes = {
-    base: "block font-medium",
+    base: "",
     disabled: "opacity-75 cursor-not-allowed",
     size: {
         small: "",
-        normal: "mb-2 text-sm",
+        normal: "mt-2 text-sm",
         large: "",
     },
     variant: {
         primary: "text-gray-900",
-        danger: "text-red-700",
+        danger: "text-red-600",
     },
 }
 
-function CInputLabel({
+function InputMessage({
     children,
-    name,
     className,
     variant = "primary",
     size = "normal",
     ...props
 }) {
     return (
-        <label
-            htmlFor={name}
+        <p
             className={clsx(
                 classes.base,
                 classes.size[size],
@@ -35,18 +33,17 @@ function CInputLabel({
             {...props}
         >
             {children}
-        </label>
+        </p>
     )
 }
 
-CInputLabel.displayName = "Custom input label"
+InputMessage.displayName = "Custom input label"
 
-CInputLabel.propTypes = {
+InputMessage.propTypes = {
     children: PropTypes.any,
-    name: PropTypes.string,
     className: PropTypes.string,
     variant: PropTypes.string,
     size: PropTypes.string,
 }
 
-export default CInputLabel
+export default InputMessage

@@ -7,22 +7,39 @@ import Contact from "./features/home/Contact"
 import Protected from "./features/home/Protected"
 import Login from "./features/auth/Login"
 import Register from "./features/auth/Register"
+import RedirectIfLoggedIn from "./features/auth/RedirectIfLoggedIn"
+import NotFound from "./components/shared/NotFound"
+import RequireAuth from "./features/auth/RequireAuth"
+import Profile from "./features/profile/Profile"
 
 function App() {
     return (
         <Routes>
-            {/* check if user exist if exist then navigate / */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-
             <Route element={<PersistLogin />}>
+                <Route element={<RedirectIfLoggedIn />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                </Route>
+
                 <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/protected" element={<Protected />} />
+                    <Route
+                        element={
+                            <RequireAuth allowedRoles={["User", "Admin"]} />
+                        }
+                    >
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/profile" element={<Profile />} />
+                    </Route>
+
+                    <Route element={<RequireAuth allowedRoles={["Admin"]} />}>
+                        <Route path="/protected" element={<Protected />} />
+                    </Route>
                 </Route>
             </Route>
+
+            <Route path="*" element={<NotFound />} />
             {/* todo routes */}
             {/* verify email */}
             {/* forgot password */}

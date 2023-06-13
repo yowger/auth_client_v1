@@ -25,10 +25,21 @@ export const authApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled
+                    console.log(
+                        "🚀 ~ file: authApiSlice.js:28 ~ onQueryStarted ~ data:",
+                        data
+                    )
+
                     const { accessToken } = data
 
+                    if (!accessToken) {
+                        return
+                    }
+
                     dispatch(setCredentials({ accessToken }))
-                } catch (err) {}
+                } catch (error) {
+                    console.error("refresh token error: ", error)
+                }
             },
         }),
         sendLogout: builder.mutation({
@@ -38,17 +49,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
             }),
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
-                    const data = await queryFulfilled
-                    // console.log(
-                    //     "🚀 ~ file: authApiSlice.js:44 ~ onQueryStarted ~ data:",
-                    //     data
-                    // )
+                    await queryFulfilled
 
                     dispatch(logOut())
 
-                    // setTimeout(() => {
-                    dispatch(apiSlice.util.resetApiState())
-                    // }, 1000)
+                    setTimeout(() => {
+                        dispatch(apiSlice.util.resetApiState())
+                    }, 1000)
                 } catch (err) {
                     console.log(err)
                 }

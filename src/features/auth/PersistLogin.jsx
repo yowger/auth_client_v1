@@ -6,49 +6,57 @@ import { useRefreshTokenMutation } from "./authApiSlice"
 
 function PersistLogin() {
     const token = useSelector(selectCurrentToken)
-    const [isTokenVerified, setIsTokenVerified] = useState(false)
+    const [trueSuccess, setTrueSuccess] = useState(false)
 
     const [
         refreshToken,
-        { isUninitialized, isLoading, isSuccess, isError, error },
+        {
+            isUninitialized: tokenIsUninitialized,
+            isLoading: tokenIsLoading,
+            isSuccess: tokenIsSuccess,
+            isError,
+            error,
+        },
     ] = useRefreshTokenMutation()
-    console.log(
-        "🚀 ~ file: PersistLogin.jsx:14 ~ PersistLogin ~ isError:",
-        isError
-    )
-    console.log("🚀 ~ file: PersistLogin.jsx:14 ~ PersistLogin ~ error:", error)
 
-    const tokenIsVerified = isSuccess && isTokenVerified
-    const tokenIsLoading = isLoading
-    const TokenIsInvalid = isError
+    const effectRan = useRef(false)
+
+    const tokenIsVerified = tokenIsSuccess && trueSuccess
 
     useEffect(() => {
-        async function verifyRefreshToken() {
-            try {
-                await refreshToken()
-                setIsTokenVerified(true)
-            } catch (error) {
-                console.error("refreshToken error", error)
+        if (effectRan.current === true) {
+            const verifyRefreshToken = async () => {
+                try {
+                    await refreshToken()
+                    setTrueSuccess(true)
+                } catch (error) {
+                    console.error("refreshToken error", error)
+                }
+            }
+
+            if (!token) {
+                verifyRefreshToken()
             }
         }
-
-        if (!token) {
-            verifyRefreshToken()
-        }
-
+        return () => (effectRan.current = true)
         // eslint-disable-next-line
     }, [])
 
     let content
 
-    if (token || tokenIsVerified) {
-        content = <Outlet />
-    } else if (tokenIsLoading) {
+    if (tokenIsLoading) {
         content = <p>loading....</p>
-    } else if (TokenIsInvalid) {
-        content = <Navigate to="/login" replace />
-        // content = "refresh token error"
+    } else if (tokenIsVerified) {
+        console.log("nice 1")
+        content = <Outlet />
+    } else if (trueSuccess) {
+        console.log("nice 2")
+        content = <Outlet />
     }
+    // else if (TokenIsInvalid) {
+    //     // content = <Navigate to="/login" replace />
+    //     // content = "refresh token error"
+    // }
 
     return content
 }
