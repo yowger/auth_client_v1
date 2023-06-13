@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 
-const usernameFormat = /^[a-zA-Z0-9_-]+$/
+// const usernameFormat = /^[a-zA-Z0-9_-]+$/
 // only lower and upper case letters, numbers and dash and underscore
 
 const passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\S]{5,}$/

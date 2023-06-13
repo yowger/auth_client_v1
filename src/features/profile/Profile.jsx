@@ -208,6 +208,15 @@ function Profile() {
 
                     <div className="flex">
                         <p className="w-1/4 text-sm font-medium text-gray-900">
+                            Provider
+                        </p>
+                        <p className="w-3/4 text-sm text-gray-500">
+                            {user?.provider?.name}
+                        </p>
+                    </div>
+
+                    <div className="flex">
+                        <p className="w-1/4 text-sm font-medium text-gray-900">
                             Email
                         </p>
                         <p className="w-3/4 text-sm text-gray-500">

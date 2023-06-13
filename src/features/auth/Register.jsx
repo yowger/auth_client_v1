@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -12,20 +11,9 @@ function Register() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const [
-        signUp,
-        {
-            isLoading: signUpIsLoading,
-            signUpIsSuccess,
-            signUpIsError,
-            signUpError,
-        },
-    ] = useSignUpMutation()
+    const [signUp, { isLoading: signUpIsLoading }] = useSignUpMutation()
 
-    const [
-        login,
-        { loginIsLoading, loginIsSuccess, loginIsError, loginError },
-    ] = useLoginMutation()
+    const [login] = useLoginMutation()
 
     const {
         handleSubmit,
@@ -129,6 +117,7 @@ function Register() {
                                 />
                                 <button
                                     type="submit"
+                                    disabled={signUpIsLoading}
                                     className="primary-button"
                                 >
                                     Sign up

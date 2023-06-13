@@ -6,7 +6,7 @@ import { useGetPostQuery, useSendPostMutation } from "./postApiSlice"
 import useAuth from "../../hooks/useAuth"
 
 function Home() {
-    const { isLoggedIn, userId } = useAuth()
+    const { isLoggedIn, id: userId } = useAuth()
 
     const [
         sendPost,
@@ -103,6 +103,7 @@ function Home() {
                             let enablePostModify = false
 
                             const isSameUser = userId === postUserId
+                            console.log("same id? ", userId, " = ", postUserId)
 
                             if (isLoggedIn && isSameUser) {
                                 enablePostModify = true

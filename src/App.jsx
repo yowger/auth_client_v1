@@ -11,6 +11,7 @@ import RedirectIfLoggedIn from "./features/auth/RedirectIfLoggedIn"
 import NotFound from "./components/shared/NotFound"
 import RequireAuth from "./features/auth/RequireAuth"
 import Profile from "./features/profile/Profile"
+import ForgotPassword from "./features/auth/ForgotPassword"
 
 function App() {
     return (
@@ -19,6 +20,10 @@ function App() {
                 <Route element={<RedirectIfLoggedIn />}>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route
+                        path="/forgot_password"
+                        element={<ForgotPassword />}
+                    />
                 </Route>
 
                 <Route element={<Layout />}>
