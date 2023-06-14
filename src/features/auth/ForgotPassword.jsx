@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import TextInput from "../../components/shared/TextInput"
-import resetPasswordSchema from "../../services/yup/resetPasswordSchema"
+import forgotPasswordSchema from "../../services/forgotPasswordSchema"
 import { useForgotPasswordMutation } from "./authApiSlice"
 
 const ResetPasswordPage = () => {
@@ -20,7 +20,7 @@ const ResetPasswordPage = () => {
         formState: { errors },
     } = useForm({
         criteriaMode: "all",
-        resolver: yupResolver(resetPasswordSchema),
+        resolver: yupResolver(forgotPasswordSchema),
     })
 
     console.log(

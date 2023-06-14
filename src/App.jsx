@@ -12,6 +12,7 @@ import NotFound from "./components/shared/NotFound"
 import RequireAuth from "./features/auth/RequireAuth"
 import Profile from "./features/profile/Profile"
 import ForgotPassword from "./features/auth/ForgotPassword"
+import ResetPassword from "./features/auth/ResetPassword"
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                         path="/forgot_password"
                         element={<ForgotPassword />}
                     />
+                    <Route path="/reset_password" element={<ResetPassword />} />
                 </Route>
 
                 <Route element={<Layout />}>
