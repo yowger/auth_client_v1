@@ -13,6 +13,7 @@ import RequireAuth from "./features/auth/RequireAuth"
 import Profile from "./features/profile/Profile"
 import ForgotPassword from "./features/auth/ForgotPassword"
 import ResetPassword from "./features/auth/ResetPassword"
+import InvalidToken from "./features/auth/InvalidToken"
 
 function App() {
     return (
@@ -25,7 +26,12 @@ function App() {
                         path="/forgot_password"
                         element={<ForgotPassword />}
                     />
-                    <Route path="/reset_password" element={<ResetPassword />} />
+                    {/* vite for some reason does not take params with dots, solution: https://www.npmjs.com/package/vite-plugin-rewrite-all*/}
+                    <Route
+                        path="/reset_password/:token"
+                        element={<ResetPassword />}
+                    />
+                    <Route path="/invalid_token" element={<InvalidToken />} />
                 </Route>
 
                 <Route element={<Layout />}>

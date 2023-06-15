@@ -49,7 +49,7 @@ const ResetPasswordPage = () => {
             }
 
             const resetPasswordCoolDownMessage =
-                "You have recently sent a request to this email. Please try again in 5 minutes."
+                "You have recently sent a request to this email. Please check your spam folder or try again in 5 minutes."
 
             switch (error.status) {
                 case 404:
@@ -75,7 +75,7 @@ const ResetPasswordPage = () => {
                 {resetSent ? (
                     <div className="mb-4 text-green-600">
                         An email with reset instructions has been sent to your
-                        email address.
+                        email address. The message may be in your spam folder
                     </div>
                 ) : (
                     <form

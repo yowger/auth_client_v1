@@ -1,18 +1,20 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { Link, useLocation, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import TextInput from "../../components/shared/TextInput"
 import resetPasswordSchema from "../../services/yup/resetPasswordSchema"
 import { useResetPasswordMutation } from "./authApiSlice"
 import jwtDecode from "jwt-decode"
 
 const ResetPasswordPage = () => {
-    const location = useLocation()
-    const searchParams = new URLSearchParams(location.search)
-    const token = searchParams.get("token")
+    const { token } = useParams()
+    const navigate = useNavigate()
+    console.log(
+        "🚀 ~ file: ResetPassword.jsx:12 ~ ResetPasswordPage ~ token:",
+        token
+    )
 
-    // useEffect(() => {
     const isResetTokenExpired = (resetToken) => {
         try {
             const decodedToken = jwtDecode(resetToken)
@@ -28,14 +30,12 @@ const ResetPasswordPage = () => {
 
     const isTokenExpired = isResetTokenExpired(token)
 
-    if (isTokenExpired) {
-        console.log("token is expired")
-        // Token is expired, redirect to Token Expired page
-        // history.push("/token_expired")
-    } else {
-        console.log("token is goood")
-    }
-    // }, [token, history])
+    useEffect(() => {
+        if (isTokenExpired) {
+            console.log("token is expired")
+            // navigate("/invalid_token")
+        }
+    }, [isTokenExpired, navigate])
 
     const [isPasswordReset, setIsPasswordReset] = useState(false)
 
