@@ -48,8 +48,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 }
             },
         }),
+        updateUserImage: builder.mutation({
+            query: ({ formData }) => ({
+                url: "/user/upload_profile_image",
+                method: "POST",
+                body: formData,
+            }),
+        }),
     }),
 })
 
-export const { useGetUserQuery, useUpdateUserMutation, useDeleteUserMutation } =
-    userApiSlice
+export const {
+    useGetUserQuery,
+    useUpdateUserMutation,
+    useDeleteUserMutation,
+    useUpdateUserImageMutation,
+} = userApiSlice

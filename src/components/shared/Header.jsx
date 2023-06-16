@@ -65,9 +65,7 @@ function Header() {
                                                     <img
                                                         className="mr-3 h-10 w-10 rounded-full"
                                                         src={
-                                                            avatar
-                                                                ? avatar
-                                                                : "https://picsum.photos/200/300"
+                                                            avatar ? avatar : "https://picsum.photos/200/300"
                                                         }
                                                     />
 

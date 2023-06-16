@@ -19,6 +19,7 @@ function useAuth() {
 
     if (userToken) {
         const decodedUserToken = jwtDecode(userToken)
+        console.log("🚀 ~ file: useAuth.js:22 ~ useAuth ~ decodedUserToken:", decodedUserToken)
 
         const {
             id,

@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import useAuth from "../../hooks/useAuth"
 import userSchema from "../../services/yup/userSchema"
 import {
     useGetUserQuery,
     useUpdateUserMutation,
     useDeleteUserMutation,
+    useUpdateUserImageMutation,
 } from "./userApiSlice"
 
 function Profile() {
@@ -108,7 +108,35 @@ function Profile() {
         }
     }
 
-    // todo if logout, goto login then if re log go back prev page
+    const [
+        updateUserImage,
+        {
+            isLoading: updateUserImageIsLoading,
+            isSuccess: updateUserImageIsSuccess,
+            isError: updateUserImageIsError,
+            error: updateUserImageError,
+        },
+    ] = useUpdateUserImageMutation()
+
+    const [selectedFile, setSelectedFile] = useState(null)
+
+    function handleFileChange(event) {
+        const file = event.target.files[0]
+        setSelectedFile(file)
+    }
+
+    async function handleFileUpload() {
+        try {
+            const formData = new FormData()
+            formData.append("file", selectedFile)
+
+            await updateUserImage({
+                formData,
+            })
+        } catch (error) {
+            console.log("ERror uploading file: ", error)
+        }
+    }
 
     useEffect(() => {
         const isModifyingProfile = profileModify.edit || profileModify.delete
@@ -151,15 +179,29 @@ function Profile() {
                         </button>
                     </div>
                 )}
-                <div className="flex flex-col items-center py-8">
+                <div className="flex flex-col items-center py-8 overflow-hidden">
                     <img
-                        className="mb-3 h-24 w-24 rounded-full shadow-sm"
-                        src={user?.avatar}
+                        className="rounded-full w-24 h-24"
+                        src={user?.profileImage.url}
                         alt="profile image"
                     />
                 </div>
 
                 <div className="flex flex-col gap-2 px-10">
+                    <div>
+                        <p className="w-1/4 text-sm font-medium text-gray-900">
+                            Avatar
+                        </p>
+                        <div>
+                            <input type="file" onChange={handleFileChange} />
+                            <button
+                                className="border-2 p-2"
+                                onClick={handleFileUpload}
+                            >
+                                Upload File
+                            </button>
+                        </div>
+                    </div>
                     <div className="flex">
                         <p className="w-1/4 text-sm font-medium text-gray-900">
                             Name

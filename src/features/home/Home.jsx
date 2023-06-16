@@ -97,8 +97,10 @@ function Home() {
                             const {
                                 _id: postUserId,
                                 username,
-                                avatar,
+                                profileImage,
                             } = singlePost.user
+
+                            const avatar = profileImage.url
 
                             let enablePostModify = false
 
